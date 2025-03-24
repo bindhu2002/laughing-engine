@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Project Gallery</title>
+  <style>
+    /* Global Reset & Typography */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #f8f9fa;
+    }
+
+    /* Layout Container */
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      width: 250px;
+      background-color: #ffffff;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+    .sidebar h2 {
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    .project-list {
+      list-style: none;
+    }
+    .project-list li {
+      margin-bottom: 1rem;
+    }
+    .project-list a {
+      display: block;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #333;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .project-list a:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    .project-list a.active {
+      background-color: #007bff;
+      color: white;
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #ffffff;
+    }
+    .content-area h2 {
+      color: #6c757d;
+      margin-bottom: 1.5rem;
+    }
+    .project-content {
+      width: 100%;
+      min-height: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Default Placeholder */
+    .project-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .project-placeholder h3 {
+      font-size: 3rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      margin-bottom: 1rem;
+    }
+    .project-placeholder p {
+      font-size: 1.2rem;
+      color: white;
+      opacity: 0.8;
+    }
+
+    /* Task 1: Expectation Document Styling */
+    .project-content-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .project-content-inner h3 {
+      color: #2c3e50;
+      margin: 1.5rem 0 1rem;
+      font-size: 1.5rem;
+    }
+    .project-content-inner p {
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .project-content-inner ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 1rem 0;
+    }
+    .project-content-inner ul li {
+      padding: 0.5rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: #444;
+    }
+    .project-content-inner ul li:before {
+      content: "•";
+      color: #007bff;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    /* Task 2: Basic HTML Styling */
+    .basic-html-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .basic-html-content .page-title {
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .basic-html-content .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+    }
+    .basic-html-content .header h2 {
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .basic-html-content .header p {
+      color: #666;
+    }
+    .basic-html-content .content {
+      margin-bottom: 2rem;
+    }
+    .basic-html-content .content p {
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .basic-html-content button {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .basic-html-content button:hover {
+      background-color: #0056b3;
+    }
+    .basic-html-content .button-container {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* Task 4: Welcome to JS Styling */
+    .welcome-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .welcome-container input {
+      padding: 10px;
+      width: 250px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-right: 10px;
+    }
+    .welcome-container button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .welcome-container button:hover {
+      background-color: #0056b3;
+    }
+    .welcome-message {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+
+    /* Task 5: Calculator Styling */
+    .calculator-dark {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      color: #fff;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .calculator-dark input {
+      width: 100%;
+      font-size: 20px;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #222;
+      color: #fff;
+    }
+    .calculator-dark input#res {
+      background-color: #fff;
+      color: #000;
+      font-weight: bold;
+    }
+    .calculator-dark .button_div {
+      margin-top: 20px;
+      display: grid;
+      gap: 10px;
+    }
+    .calculator-dark button {
+      font-size: 18px;
+      padding: 10px;
+      background-color: #ff4444;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .calculator-dark button:hover {
+      background-color: #ff2222;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+
+    /* Task 15: Age Calculator Styling */
+    .calculator {
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .calculator input[type="date"] {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    .calculator button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .calculator button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Task 16: JSON Display Styling */
+    .json-display {
+      background-color: #e9ecef;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .json-display pre {
+      text-align: left;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 1rem;
+      margin-top: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .json-display button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .json-display button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Task 3: CSS Hover Effects */
+    .google-hover-demo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+    .google-hover-demo h3 {
+      color: #333;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .google {
+      display: flex;
+      gap: 15px;
+    }
+    .google span {
+      font-size: 4rem;
+      font-weight: bold;
+      transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+      cursor: pointer;
+    }
+    .google span:hover {
+      transform: scale(1.5) translateY(-10px);
+    }
+    .google .g {
+      color: #4285F4;
+    }
+    .google .o1 {
+      color: #EA4335;
+    }
+    .google .o2 {
+      color: #FBBC05;
+    }
+    .google .g2 {
+      color: #34A853;
+    }
+    .google .l {
+      color: #EA4335;
+    }
+    .google .e {
+      color: #4285F4;
+    }
+
+    /* Task 6: GitHub Integration Styles */
+    .github-calculator {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #f6f8fa;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+    }
+    .github-calculator h3 {
+      color: #24292f;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    .github-calculator .input_div {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .github-calculator input {
+      padding: 0.5rem;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 20px;
+      background-color: #ffffff;
+    }
+    .github-calculator input:focus {
+      border-color: #0969da;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
+    }
+    .github-calculator .button_div {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    .github-calculator button {
+      padding: 0.5rem 1rem;
+      background-color: #2da44e;
+      color: #ffffff;
+      border: 1px solid rgba(27, 31, 36, 0.15);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .github-calculator button:hover {
+      background-color: #2c974b;
+    }
+    #res {
+      background-color: #f6f8fa !important;
+      font-weight: bold;
+      color: #24292f;
+    }
+
+    /* Task 7: JavaScript Operators */
+    .js-operators {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      color: #d4d4d4;
+      font-family: 'Consolas', monospace;
+    }
+    .js-operators h3 {
+      color: #569cd6;
+      margin-bottom: 1.5rem;
+    }
+    .js-operators .code-container {
+      background-color: #2d2d2d;
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+    .js-operators pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    .js-operators .code-line {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      align-items: center;
+    }
+    .js-operators .line-number {
+      color: #858585;
+      min-width: 20px;
+      text-align: right;
+    }
+    .js-operators .code {
+      color: #d4d4d4;
+    }
+    .js-operators .keyword {
+      color: #569cd6;
+    }
+    .js-operators .operator {
+      color: #d4d4d4;
+    }
+    .js-operators .number {
+      color: #b5cea8;
+    }
+    .js-operators .comment {
+      color: #6a9955;
+    }
+    .js-operators button {
+      background-color: #0e639c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Consolas', monospace;
+      margin-right: 0.5rem;
+    }
+    .js-operators button:hover {
+      background-color: #1177bb;
+    }
+    .js-operators .output {
+      background-color: #2d2d2d;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      border-left: 3px solid #569cd6;
+    }
+
+    /* Task 8: Text Transformer */
+    .text-transformer {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: linear-gradient(135deg, #6e8efb, #a777e3);
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    .text-transformer h3 {
+      color: white;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    .text-transformer .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .text-transformer input {
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .text-transformer input:focus {
+      outline: none;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .text-transformer input:disabled {
+      background: rgba(255, 255, 255, 0.8);
+      color: #333;
+      font-weight: 500;
+    }
+    .text-transformer label {
+      color: white;
+      font-size: 0.9rem;
+      margin-bottom: -0.5rem;
+    }
+    .text-transformer .transform-options {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+    .text-transformer button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      background: white;
+      color: #6e8efb;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    .text-transformer button:hover {
+      background: #f0f0f0;
+      transform: translateY(-2px);
+    }
+    .text-transformer button.active {
+      background: #a777e3;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h2>Project Folder</h2>
+      <ul class="project-list" id="projectList">
+        <!-- Project list populated by JS -->
+      </ul>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <h2>Select a project to display</h2>
+      <div class="project-content" id="projectContent">
+        <div class="project-placeholder">
+          <h3>Select a project from the menu</h3>
+          <p>Click on any project in the navigation panel to view its contents</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* JSON Array with class work data */
+    const classWorks = [
+      {
+        id: "task1",
+        title: "Task 1: Expectation Document",
+        content: `<div class="project-content-inner">
+            <p>When I first read about this course, I was hooked. The idea of crafting user-friendly web applications felt exciting. Why? Because it's the perfect mix of creativity and problem-solving.</p>
+            <h3>Why did I choose this course?</h3>
+            <p>Simple. I want to learn how to bring ideas to life. Web development is like building a digital home. The structure? HTML. The design? CSS. The personality? JavaScript. This course covers all that—and more.</p>
+            <p>I've always admired websites that feel effortless. You click a button, and bam! Magic. I want to create that magic.</p>
+            <h3>What do I hope to learn?</h3>
+            <p>By the end of this course, I want to:</p>
+            <ul>
+              <li>Build websites that look great and work smoothly</li>
+              <li>Use HTML and CSS to make responsive pages</li>
+              <li>Add life to those pages with JavaScript</li>
+              <li>Dive into React for reusable components</li>
+              <li>Learn Tailwind CSS for quick, clean designs</li>
+              <li>Tackle back-end basics with Flask and Python</li>
+              <li>Deploy full-stack apps to the real world</li>
+            </ul>
+            <h3>How will this course help me?</h3>
+            <p>It's not just about coding; it's about thinking like a developer. In my career, full-stack skills are highly valued. This course is the perfect prep.</p>
+            <p>In a nutshell, this course is my ticket to better skills and smarter projects.</p>
+          </div>`,
+        backgroundColor: "#f8f9fa"
+      },
+      {
+        id: "task2",
+        title: "Task 2: Basic HTML Styling",
+        content: `<div class="basic-html-content">
+                    <h1 class="page-title">Basic HTML Styling Demo</h1>
+                    <div class="header">
+                        <h2>Welcome to My Custom Designed Page!</h2>
+                        <p>This page demonstrates basic HTML and CSS styling techniques</p>
+                    </div>
+                    <div class="content">
+                        <p>
+                            This is some random text! Lorem ipsum dolor sit amet consectetur
+                            adipisicing elit. Fugiat mollitia enim sunt sapiente nemo assumenda
+                            eius tenetur architecto repellat, minus aut! Unde, ut hic. Pariatur
+                            repellat fugit esse explicabo officia!
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                            Necessitatibus ipsum quibusdam veritatis consequatur perspiciatis
+                            delectus unde vitae, earum suscipit nisi ad veniam amet ipsam!
+                            Blanditiis culpa delectus ad cumque iste.
+                        </p>
+                    </div>
+                    <div class="button-container">
+                        <button onclick="showHome()">View Home Page</button>
+                        <button onclick="showDashboard()">View Dashboard</button>
+                    </div>
+                  </div>`,
+        backgroundColor: "#4ecdc4"
+      },
+      {
+        id: "task3",
+        title: "Task 3: CSS Hover Effects",
+        content: `<div class="google-hover-demo">
+                    <h3>Interactive Google Logo with Hover Effects</h3>
+                    <div class="google">
+                      <span class="g">G</span>
+                      <span class="o1">o</span>
+                      <span class="o2">o</span>
+                      <span class="g2">g</span>
+                      <span class="l">l</span>
+                      <span class="e">e</span>
+                    </div>
+                  </div>`,
+        backgroundColor: "#ffffff"
+      },
+      {
+        id: "task4",
+        title: "Task 4: Welcome to JS",
+        content: `<div class="welcome-container">
+                    <h2>Enter Your Username</h2>
+                    <input type="text" id="username" placeholder="Enter username">
+                    <button onclick="welcomeUser()">Enter</button>
+                    <div id="welcome-message" class="welcome-message"></div>
+                  </div>`,
+        backgroundColor: "#f0f4f8"
+      },
+      {
+        id: "task5",
+        title: "Task 5: Calculator with JS",
+        content: `<div class="calculator-dark">
+                    <div class="input_div">
+                      <input placeholder="Enter the value of X" id="num1" />
+                      <input placeholder="Enter the value of Y" id="num2" />
+                      <input placeholder="Result will appear here" id="res" disabled />
+                    </div>
+                    <div class="button_div">
+                      <button onclick="calculate('add')">Addition (X + Y)</button>
+                      <button onclick="calculate('sub')">Subtraction (X - Y)</button>
+                      <button onclick="calculate('mul')">Multiplication (X * Y)</button>
+                      <button onclick="calculate('div')">Division (X / Y)</button>
+                    </div>
+                  </div>`,
+        backgroundColor: "#000000"
+      },
+      {
+        id: "task6",
+        title: "Task 6: GitHub Integration",
+        content: `<div class="github-calculator">
+                    <h3>GitHub-Style Calculator</h3>
+                    <div class="input_div">
+                        <input placeholder="Enter the value of X" id="num1" type="number"/>
+                        <input placeholder="Enter the value of Y" id="num2" type="number"/>
+                        <input placeholder="Result will appear here" id="res" disabled/>
+                    </div>
+                    <div class="button_div">
+                        <button onclick="calculate('add')">Addition (X + Y)</button>
+                        <button onclick="calculate('subtract')">Subtraction (X - Y)</button>
+                        <button onclick="calculate('multiply')">Multiplication (X * Y)</button>
+                        <button onclick="calculate('divide')">Division (X / Y)</button>
+                    </div>
+                </div>`,
+        backgroundColor: "#f6f8fa"
+      },
+      {
+        id: "task7",
+        title: "Task 7: JavaScript Operators",
+        content: `<div class="js-operators">
+                    <h3>JavaScript Operators Demo</h3>
+                    <div class="code-container">
+                      <div class="code-line">
+                        <span class="line-number">1</span>
+                        <span class="code"><span class="keyword">let</span> x = <span class="number">5</span>;</span>
+                      </div>
+                      <div class="code-line">
+                        <span class="line-number">2</span>
+                        <span class="code">console.log(x);</span>
+                      </div>
+                      <div class="code-line">
+                        <span class="line-number">3</span>
+                        <span class="code"><span class="keyword">let</span> y = x - <span class="number">2</span>;</span>
+                      </div>
+                      <div class="code-line">
+                        <span class="line-number">4</span>
+                        <span class="code">y += <span class="number">10</span>;</span>
+                      </div>
+                      <div class="code-line">
+                        <span class="line-number">5</span>
+                        <span class="code">y -= <span class="number">15</span>;</span>
+                      </div>
+                      <div class="code-line">
+                        <span class="line-number">6</span>
+                        <span class="code">y /= <span class="number">2</span>;</span>
+                      </div>
+                      <div class="code-line">
+                        <span class="line-number">7</span>
+                        <span class="code">y **= <span class="number">3</span>;</span>
+                      </div>
+                      <div class="code-line">
+                        <span class="line-number">8</span>
+                        <span class="code">y ^= <span class="number">2</span>;</span>
+                      </div>
+                    </div>
+                    <button onclick="executeCode()">Run Code</button>
+                    <button onclick="explainCode()">Explain Steps</button>
+                    <div id="output" class="output">
+                      Click "Run Code" to see the output
+                    </div>
+                  </div>`,
+        backgroundColor: "#1e1e1e"
+      },
+      {
+        id: "task8",
+        title: "Task 8: Text Transformer",
+        content: `<div class="text-transformer">
+                    <h3>Text Transformer</h3>
+                    <div class="input-group">
+                      <label for="inputField">Input Text</label>
+                      <input id="inputField" 
+                             type="text"
+                             placeholder="Type something..." 
+                             onkeyup="transformText();">
+                    </div>
+                    <div class="input-group">
+                      <label for="outputField">Transformed Text</label>
+                      <input id="outputField" 
+                             type="text"
+                             placeholder="Transformed text will appear here..." 
+                             disabled>
+                    </div>
+                    <div class="transform-options">
+                      <button onclick="setTransformType('upper')" id="upperBtn" class="active">UPPERCASE</button>
+                      <button onclick="setTransformType('lower')" id="lowerBtn">lowercase</button>
+                      <button onclick="setTransformType('title')" id="titleBtn">Title Case</button>
+                      <button onclick="setTransformType('reverse')" id="reverseBtn">Reverse</button>
+                    </div>
+                  </div>`,
+        backgroundColor: "#6e8efb"
+      },
+      {
+        id: "task9",
+        title: "Task 9: Conditions (Grade Calculator)",
+        content: `<div class="grade-calculator-content">
+                    <h3>Grade Calculator</h3>
+                    <p>Enter a score between 0 and 100 to calculate your grade:</p>
+                    <input type="number" id="input" placeholder="Enter score here" onkeyup="update()" />
+                    Your grade is: <span id="grade_span"></span>
+                  </div>`,
+        backgroundColor: "#f8f9fa"
+      },
+      {
+        id: "task10",
+        title: "Task 10: Call Stack with Array",
+        content: `<div class="call-stack-content">
+                    <h3>Call Stack</h3>
+                    <input type="text" id="taskInput" placeholder="Task name">
+                    <button id="addBtn">Add Task</button>
+                    <button id="undoBtn" class="disabled" disabled>Undo Task</button>
+                    <div id="pipeline" class="output"></div>
+                  </div>`,
+        backgroundColor: "#f8f9fa"
+      },
+      {
+        id: "task11",
+        title: "Task 11: Loops (Shapes and Sum Calculator)",
+        content: `<div class="loops-content">
+                    <h3>Generate Shape</h3>
+                    <input id="user_input" placeholder="Enter size" onkeyup="generate_shape();" />
+                    <div id="content_div_shape"></div>
+                    <hr>
+                    <h3>Calculate Sum</h3>
+                    <input id="input_a" placeholder="Enter A" />
+                    <input id="input_b" placeholder="Enter B" />
+                    <button onclick="calculate();">Calculate</button>
+                    <div id="content_div_sum"></div>
+                  </div>`,
+        backgroundColor: "#f8f9fa"
+      },
+      {
+        id: "task12",
+        title: "Task 12: Student Information",
+        content: `<div class="student-content">
+                    <h3>Student Information</h3>
+                    <input type="text" id="make" placeholder="Enter New Name" />
+                    <button onclick="insert()">Update Name</button>
+                    <div id="demo_div" class="output"></div>
+                  </div>`,
+        backgroundColor: "#f8f9fa"
+      },
+      {
+        id: "task13",
+        title: "Task 13: Student Management System",
+        content: `<div class="student-management">
+                    <h2>Student Management System</h2>
+                    <div class="form-group">
+                      <label for="name">Name</label>
+                      <input type="text" id="name" placeholder="Enter name">
+                      <div class="error" id="nameError"></div>
+                    </div>
+                    <div class="form-group">
+                      <label for="id">Student ID</label>
+                      <input type="text" id="id" placeholder="Enter student ID">
+                      <div class="error" id="idError"></div>
+                    </div>
+                    <div class="form-group">
+                      <label for="major">Major</label>
+                      <input type="text" id="major" placeholder="Enter major">
+                      <div class="error" id="majorError"></div>
+                    </div>
+                    <div class="form-group">
+                      <label for="uni">University</label>
+                      <input type="text" id="uni" placeholder="Enter university">
+                      <div class="error" id="uniError"></div>
+                    </div>
+                    <div class="form-group">
+                      <label for="searchInput">Search</label>
+                      <input type="text" id="searchInput" placeholder="Search by name or ID">
+                      <button class="btn-success" onclick="searchStudents()">Search</button>
+                    </div>
+                    <div class="buttons">
+                      <button class="btn-success" onclick="addStudent()">Add Student</button>
+                      <button class="btn-danger" onclick="clearInputs()">Clear Inputs</button>
+                      <button class="btn-success" onclick="showStudents()">Show All</button>
+                      <button class="btn-danger" onclick="clearDisplay()">Clear Display</button>
+                    </div>
+                    <div id="infoDisplay"></div>
+                  </div>`,
+        backgroundColor: "#f8f9fa"
+      },
+      {
+        id: "task15",
+        title: "Task 15: Age Calculator",
+        content: `
+          <div class="calculator">
+            <h1>Age Calculator</h1>
+            <p>Select your date of birth:</p>
+            <input type="date" id="dob">
+            <button onclick="calculateAge()">Calculate Age</button>
+            <div id="result"></div>
+          </div>`,
+        backgroundColor: "#f8f9fa"
+      },
+      {
+        id: "task16",
+        title: "Task 16: JSON Display",
+        content: `
+          <div class="json-display">
+            <h2>JSON Display Example</h2>
+            <p>Click below to display a JSON object:</p>
+            <button onclick="displayJson()">Display JSON</button>
+            <pre id="jsonOutput"></pre>
+          </div>`,
+        backgroundColor: "#e9ecef"
+      }
+    ];
+
+    /* Function to generate the list of projects in the sidebar */
+    function generateProjectList() {
+      const projectList = document.getElementById('projectList');
+      classWorks.forEach(project => {
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+        link.textContent = project.title;
+        link.href = '#';
+        link.classList.add(project.id);
+        link.addEventListener('click', function() {
+          displayProjectContent(project);
+        });
+        listItem.appendChild(link);
+        projectList.appendChild(listItem);
+      });
+    }
+
+    /* Function to display content of the selected project */
+    function displayProjectContent(project) {
+      document.querySelectorAll('.project-list a').forEach(a => a.classList.remove('active'));
+      document.querySelector(`.${project.id}`).classList.add('active');
+      const projectContent = document.getElementById('projectContent');
+      projectContent.style.backgroundColor = project.backgroundColor;
+      projectContent.innerHTML = project.content;
+      if (project.id === 'task15') {
+        initializeTask15();
+      } else if (project.id === 'task16') {
+        initializeTask16();
+      } else if (project.id === 'task4') {
+        initializeTask4();
+      } else if (project.id === 'task5') {
+        initializeTask5();
+      } else if (project.id === 'task2') {
+        initializeTask2();
+      } else if (project.id === 'task6') {
+        initializeTask6();
+      } else if (project.id === 'task7') {
+        initializeTask7();
+      } else if (project.id === 'task8') {
+        initializeTask8();
+      }
+    }
+
+    /* Function to initialize Task 4 */
+    function initializeTask4() {
+      window.welcomeUser = function() {
+        var username = document.getElementById("username").value.trim();
+        if (username !== "") {
+          document.getElementById("welcome-message").innerText = `Welcome to JS, ${username}!`;
+        } else {
+          document.getElementById("welcome-message").innerText = "Please enter a username.";
+        }
+      };
+    }
+
+    /* Function to initialize Task 5 */
+    function initializeTask5() {
+      window.calculate = function(operation) {
+        let x = parseFloat(document.getElementById("num1").value);
+        let y = parseFloat(document.getElementById("num2").value);
+        
+        if (isNaN(x) || isNaN(y)) {
+          document.getElementById("res").value = "Please enter valid numbers";
+          return;
+        }
+        
+        switch (operation) {
+          case 'add':
+            document.getElementById("res").value = x + y;
+            break;
+          case 'sub':
+            document.getElementById("res").value = x - y;
+            break;
+          case 'mul':
+            document.getElementById("res").value = x * y;
+            break;
+          case 'div':
+            if (y === 0) {
+              document.getElementById("res").value = "Cannot divide by zero!";
+            } else {
+              document.getElementById("res").value = x / y;
+            }
+            break;
+          default:
+            console.error("Invalid operation");
+        }
+      };
+    }
+
+    /* Function to initialize Task 2 */
+    function initializeTask2() {
+      window.currentView = 'home';
+      
+      window.showHome = function() {
+        const content = document.querySelector('.basic-html-content');
+        content.querySelector('.page-title').textContent = 'Index';
+        content.querySelector('.header h2').textContent = 'Welcome to My Custom Designed Page!';
+        content.querySelector('.header p').style.display = 'none';
+        window.currentView = 'home';
+      };
+      
+      window.showDashboard = function() {
+        const content = document.querySelector('.basic-html-content');
+        content.querySelector('.page-title').textContent = 'Dashboard';
+        content.querySelector('.header h2').textContent = 'Welcome to the Custom Dashboard';
+        content.querySelector('.header p').style.display = 'block';
+        content.querySelector('.header p').textContent = "It doesn't have any functionalities yet!";
+        window.currentView = 'dashboard';
+      };
+    }
+
+    /* Function to initialize Task 15 */
+    function initializeTask15() {
+      window.calculateAge = function() {
+        const dobInput = document.getElementById('dob').value;
+        if (!dobInput) {
+          document.getElementById('result').innerHTML = "Please select a date of birth";
+          return;
+        }
+        
+        const dob = new Date(dobInput);
+        const today = new Date();
+        
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+          age--;
+        }
+        
+        document.getElementById('result').innerHTML = `You are ${age} year(s) old!`;
+      };
+    }
+
+    /* Function to initialize Task 16 */
+    function initializeTask16() {
+      window.displayJson = function() {
+        const jsonObject = {
+          name: "John Doe",
+          age: 25,
+          city: "New York"
+        };
+        document.getElementById('jsonOutput').textContent = JSON.stringify(jsonObject, null, 2);
+      };
+    }
+
+    /* Function to initialize Task 6 */
+    function initializeTask6() {
+      window.calculate = function(operation) {
+        const x = parseFloat(document.getElementById('num1').value);
+        const y = parseFloat(document.getElementById('num2').value);
+        const resField = document.getElementById('res');
+        
+        if (isNaN(x) || isNaN(y)) {
+          resField.value = 'Please enter valid numbers';
+          return;
+        }
+        
+        let result;
+        switch(operation) {
+          case 'add':
+            result = x + y;
+            break;
+          case 'subtract':
+            result = x - y;
+            break;
+          case 'multiply':
+            result = x * y;
+            break;
+          case 'divide':
+            if (y === 0) {
+              resField.value = 'Cannot divide by zero';
+              return;
+            }
+            result = x / y;
+            break;
+        }
+        
+        resField.value = result.toFixed(2);
+      };
+    }
+
+    /* Function to initialize Task 7 */
+    function initializeTask7() {
+      window.executeCode = function() {
+        let output = [];
+        let x = 5;
+        output.push(`x = ${x}`);
+        
+        let y = x - 2;
+        output.push(`y = x - 2 = ${y}`);
+        
+        y += 10;
+        output.push(`y += 10 = ${y}`);
+        
+        y -= 15;
+        output.push(`y -= 15 = ${y}`);
+        
+        y /= 2;
+        output.push(`y /= 2 = ${y}`);
+        
+        y **= 3;
+        output.push(`y **= 3 = ${y}`);
+        
+        y ^= 2;
+        output.push(`y ^= 2 = ${y}`);
+        
+        document.getElementById('output').innerHTML = output.join('<br>');
+      };
+      
+      window.explainCode = function() {
+        const explanation = [
+          "1. x is initialized to 5",
+          "2. y starts as (x - 2) = 3",
+          "3. y += 10 adds 10 to y: 3 + 10 = 13",
+          "4. y -= 15 subtracts 15 from y: 13 - 15 = -2",
+          "5. y /= 2 divides y by 2: -2 ÷ 2 = -1",
+          "6. y **= 3 raises y to power 3: (-1)³ = -1",
+          "7. y ^= 2 performs bitwise XOR with 2: -1 ^ 2 = -3"
+        ];
+        document.getElementById('output').innerHTML = explanation.join('<br>');
+      };
+    }
+
+    /* Function to initialize Task 8 */
+    function initializeTask8() {
+      window.currentTransform = 'upper';
+      
+      window.setTransformType = function(type) {
+        currentTransform = type;
+        // Update button states
+        document.querySelectorAll('.text-transformer button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(type + 'Btn').classList.add('active');
+        // Re-transform text with new type
+        transformText();
+      };
+      
+      window.transformText = function() {
+        const input = document.getElementById('inputField').value;
+        const output = document.getElementById('outputField');
+        
+        let result = input;
+        switch(currentTransform) {
+          case 'upper':
+            result = input.toUpperCase();
+            break;
+          case 'lower':
+            result = input.toLowerCase();
+            break;
+          case 'title':
+            result = input.toLowerCase().split(' ')
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ');
+            break;
+          case 'reverse':
+            result = input.split('').reverse().join('');
+            break;
+        }
+        
+        output.value = result;
+      };
+    }
+
+    /* Initialize the project list */
+    generateProjectList();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
